@@ -73,19 +73,45 @@ CONF_QOS = "qos"
 DEFAULT_DISC_PREFIX = "homeassistant"
 
 KEY_AVAILABILITY_TOPIC = "avty_t"
+KEY_BLUE_TEMPLATE = "b_tpl"
+KEY_BRIGHTNESS_TEMPLATE = "bri_tpl"
+KEY_COMMAND_OFF_TEMPLATE = "cmd_off_tpl"
+KEY_COMMAND_ON_TEMPLATE = "cmd_on_tpl"
+KEY_COMMAND_TOPIC = "cmd_t"
 KEY_DEVICE = "dev"
+KEY_DEVICE_CLASS = "dev_cla"
+KEY_EFFECT_LIST = "fx_list"
+KEY_EFFECT_TEMPLATE = "fx_tpl"
+KEY_EXPIRE_AFTER = "exp_aft"
+KEY_GREEN_TEMPLATE = "g_tpl"
 KEY_IDENTIFIERS = "ids"
 KEY_MANUFACTURER = "mf"
 KEY_MODEL = "mdl"
 KEY_NAME = "name"
 KEY_UNIQUE_ID = "uniq_id"
 KEY_OFF_DELAY = "off_delay"
+KEY_OPTIMISTIC = "opt"
+KEY_PAYLOAD = "payload"
 KEY_PAYLOAD_AVAILABLE = "pl_avail"
+KEY_PAYLOAD_CLOSE = "pl_cls"
 KEY_PAYLOAD_NOT_AVAILABLE = "pl_not_avail"
+KEY_PAYLOAD_OFF = "pl_off"
+KEY_PAYLOAD_ON = "pl_on"
+KEY_PAYLOAD_OPEN = "pl_open"
+KEY_PAYLOAD_STOP = "pl_stop"
+KEY_POSITION_TOPIC ="pos_t"
+KEY_RED_TEMPLATE = "r_tpl"
+KEY_RETAIN = "retain"
+KEY_SCHEMA: "schema"
+KEY_SET_POSITION_TOPIC = "set_pos_t"
+KEY_STATE_TEMPLATE = "stat_tpl"
 KEY_STATE_TOPIC = "stat_t"
+KEY_TOPIC = "topic"
+KEY_UNIT = "unit_of_meas"
 KEY_QOS = "qos"
 KEY_SW_VERSION = "sw"
 KEY_VALUE_TEMPLATE = "val_tpl"
+KEY_WHITE_VALUE_TEMPLATE = "whit_val_tpl"
 
 UNIT_CELSIUS = "°C"
 UNIT_KWH = "kWh"
@@ -95,7 +121,13 @@ UNIT_V = "V"
 UNIT_VAR = "VAR"
 UNIT_W = "W"
 
+VALUE_CLOSE = "close"
 VALUE_FALSE = False
+VALUE_OFF = "off"
+VALUE_ON = "on"
+VALUE_OPEN = "open"
+VALUE_STOP = "stop"
+VALUE_TEMPLATE = "template"
 VALUE_TRUE = True
 
 ATTR_1_0_PL = {ATTR_ON: "1", ATTR_OFF: "0"}
@@ -385,34 +417,36 @@ else:
             )
             if config_component == component:
                 roller_mode = True
-                payload = (
-                    '{"name":"' + roller_name + '",'
-                    '"cmd_t":"' + command_topic + '",'
-                    '"pos_t":"' + position_topic + '",'
-                    '"set_pos_t":"' + set_position_topic + '",'
-                    '"pl_open":"open",'
-                    '"pl_cls":"close",'
-                    '"pl_stop":"stop",'
-                    '"opt":"false",'
-                    '"avty_t":"' + availability_topic + '",'
-                    '"pl_avail":"true",'
-                    '"pl_not_avail":"false",'
-                    '"uniq_id":"' + unique_id + '",'
-                    '"qos":"' + str(qos) + '",'
-                    '"dev": {"ids": ["' + mac + '"],'
-                    '"name":"' + device_name + '",'
-                    '"mdl":"' + model + '",'
-                    '"sw":"' + fw_ver + '",'
-                    '"mf":"' + ATTR_MANUFACTURER + '"},'
-                    '"~":"' + default_topic + '"}'
-                )
+                payload = {
+                    KEY_NAME: roller_name,
+                    KEY_COMMAND_TOPIC: command_topic,
+                    KEY_POSITION_TOPIC: position_topic,
+                    KEY_SET_POSITION_TOPIC: set_position_topic,
+                    KEY_PAYLOAD_OPEN: VALUE_OPEN,
+                    KEY_PAYLOAD_CLOSE: VALUE_CLOSE,
+                    KEY_PAYLOAD_STOP: VALUE_STOP,
+                    KEY_OPTIMISTIC: VALUE_FALSE,
+                    KEY_AVAILABILITY_TOPIC: availability_topic,
+                    KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                    KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+                    KEY_UNIQUE_ID: unique_id,
+                    KEY_QOS: str(qos),
+                    KEY_DEVICE: {
+                        KEY_IDENTIFIERS: [mac],
+                        KEY_NAME: device_name,
+                        KEY_MODEL: model,
+                        KEY_SW_VERSION: fw_ver,
+                        KEY_MANUFACTURER: ATTR_MANUFACTURER,
+                    },
+                    "~": default_topic,
+                }
             else:
                 payload = ""
             service_data = {
-                "topic": config_topic,
-                "payload": payload,
-                "retain": retain,
-                "qos": qos,
+                KEY_TOPIC: config_topic,
+                KEY_PAYLOAD: str(payload),
+                KEY_RETAIN: retain,
+                KEY_QOS: qos,
             }
             hass.services.call("mqtt", "publish", service_data, False)
 
@@ -434,31 +468,33 @@ else:
                     disc_prefix, component, id, relay_id
                 )
                 if component == config_component and not roller_mode:
-                    payload = (
-                        '{"name":"' + relay_name + '",'
-                        '"cmd_t":"' + command_topic + '",'
-                        '"stat_t":"' + state_topic + '",'
-                        '"pl_off":"off",'
-                        '"pl_on":"on",'
-                        '"avty_t":"' + availability_topic + '",'
-                        '"pl_avail":"true",'
-                        '"pl_not_avail":"false",'
-                        '"uniq_id":"' + unique_id + '",'
-                        '"qos":"' + str(qos) + '",'
-                        '"dev": {"ids": ["' + mac + '"],'
-                        '"name":"' + device_name + '",'
-                        '"mdl":"' + model + '",'
-                        '"sw":"' + fw_ver + '",'
-                        '"mf":"' + ATTR_MANUFACTURER + '"},'
-                        '"~":"' + default_topic + '"}'
-                    )
+                    payload = {
+                        KEY_NAME: relay_name,
+                        KEY_COMMAND_TOPIC: command_topic,
+                        KEY_STATE_TOPIC: state_topic,
+                        KEY_PAYLOAD_OFF: VALUE_OFF,
+                        KEY_PAYLOAD_ON: VALUE_ON,
+                        KEY_AVAILABILITY_TOPIC: availability_topic,
+                        KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                        KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+                        KEY_UNIQUE_ID: unique_id,
+                        KEY_QOS: str(qos),
+                        KEY_DEVICE: {
+                            KEY_IDENTIFIERS: [mac],
+                            KEY_NAME: device_name,
+                            KEY_MODEL: model,
+                            KEY_SW_VERSION: fw_ver,
+                            KEY_MANUFACTURER: ATTR_MANUFACTURER,
+                        },
+                        "~": default_topic,
+                    }
                 else:
                     payload = ""
                 service_data = {
-                    "topic": config_topic,
-                    "payload": payload,
-                    "retain": retain,
-                    "qos": qos,
+                    KEY_TOPIC: config_topic,
+                    KEY_PAYLOAD: str(payload),
+                    KEY_RETAIN: retain,
+                    KEY_QOS: qos,
                 }
                 hass.services.call("mqtt", "publish", service_data, False)
 
@@ -474,31 +510,33 @@ else:
                     )
                     state_topic = "~relay/{}".format(relays_sensors[sensor_id])
                     if model == ATTR_MODEL_SHELLY2 or roller_mode:
-                        payload = (
-                            '{"name":"' + sensor_name + '",'
-                            '"stat_t":"' + state_topic + '",'
-                            '"unit_of_meas":"' + relays_sensors_units[sensor_id] + '",'
-                            '"dev_cla":"' + relays_sensors_classes[sensor_id] + '",'
-                            '"val_tpl":"' + relays_sensors_tpls[sensor_id] + '",'
-                            '"avty_t":"' + availability_topic + '",'
-                            '"pl_avail":"true",'
-                            '"pl_not_avail":"false",'
-                            '"uniq_id":"' + unique_id + '",'
-                            '"qos":"' + str(qos) + '",'
-                            '"dev": {"ids": ["' + mac + '"],'
-                            '"name":"' + device_name + '",'
-                            '"mdl":"' + model + '",'
-                            '"sw":"' + fw_ver + '",'
-                            '"mf":"' + ATTR_MANUFACTURER + '"},'
-                            '"~":"' + default_topic + '"}'
-                        )
+                        payload = {
+                            KEY_NAME: sensor_name,
+                            KEY_STATE_TOPIC: state_topic,
+                            KEY_UNIT: relays_sensors_units[sensor_id],
+                            KEY_DEVICE_CLASS: relays_sensors_classes[sensor_id],
+                            KEY_VALUE_TEMPLATE: relays_sensors_tpls[sensor_id],
+                            KEY_AVAILABILITY_TOPIC: availability_topic,
+                            KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                            KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+                            KEY_UNIQUE_ID: unique_id,
+                            KEY_QOS: str(qos),
+                            KEY_DEVICE: {
+                                KEY_IDENTIFIERS: [mac],
+                                KEY_NAME: device_name,
+                                KEY_MODEL: model,
+                                KEY_SW_VERSION: fw_ver,
+                                KEY_MANUFACTURER: ATTR_MANUFACTURER,
+                            },
+                            "~": default_topic,
+                        }
                     else:
                         payload = ""
                     service_data = {
-                        "topic": config_topic,
-                        "payload": payload,
-                        "retain": retain,
-                        "qos": qos,
+                        KEY_TOPIC: config_topic,
+                        KEY_PAYLOAD: str(payload),
+                        KEY_RETAIN: retain,
+                        KEY_QOS: qos,
                     }
                     hass.services.call("mqtt", "publish", service_data, False)
 
@@ -513,31 +551,33 @@ else:
                 )
                 state_topic = "~relay/{}/{}".format(relay_id, relays_sensors[sensor_id])
                 if model != ATTR_MODEL_SHELLY2 and not roller_mode:
-                    payload = (
-                        '{"name":"' + sensor_name + '",'
-                        '"stat_t":"' + state_topic + '",'
-                        '"unit_of_meas":"' + relays_sensors_units[sensor_id] + '",'
-                        '"dev_cla":"' + relays_sensors_classes[sensor_id] + '",'
-                        '"val_tpl":"' + relays_sensors_tpls[sensor_id] + '",'
-                        '"avty_t":"' + availability_topic + '",'
-                        '"pl_avail":"true",'
-                        '"pl_not_avail":"false",'
-                        '"uniq_id":"' + unique_id + '",'
-                        '"qos":"' + str(qos) + '",'
-                        '"dev": {"ids": ["' + mac + '"],'
-                        '"name":"' + device_name + '",'
-                        '"mdl":"' + model + '",'
-                        '"sw":"' + fw_ver + '",'
-                        '"mf":"' + ATTR_MANUFACTURER + '"},'
-                        '"~":"' + default_topic + '"}'
-                    )
+                    payload = {
+                        KEY_NAME: sensor_name,
+                        KEY_STATE_TOPIC: state_topic,
+                        KEY_UNIT: relays_sensors_units[sensor_id],
+                        KEY_DEVICE_CLASS: relays_sensors_classes[sensor_id],
+                        KEY_VALUE_TEMPLATE: relays_sensors_tpls[sensor_id],
+                        KEY_AVAILABILITY_TOPIC: availability_topic,
+                        KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                        KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+                        KEY_UNIQUE_ID: unique_id,
+                        KEY_QOS: str(qos),
+                        KEY_DEVICE: {
+                            KEY_IDENTIFIERS: [mac],
+                            KEY_NAME: device_name,
+                            KEY_MODEL: model,
+                            KEY_SW_VERSION: fw_ver,
+                            KEY_MANUFACTURER: ATTR_MANUFACTURER,
+                        },
+                        "~": default_topic,
+                    }
                 else:
                     payload = ""
                 service_data = {
-                    "topic": config_topic,
-                    "payload": payload,
-                    "retain": retain,
-                    "qos": qos,
+                    KEY_TOPIC: config_topic,
+                    KEY_PAYLOAD: str(payload),
+                    KEY_RETAIN: retain,
+                    KEY_QOS: qos,
                 }
                 hass.services.call("mqtt", "publish", service_data, False)
 
@@ -578,10 +618,10 @@ else:
                 else:
                     payload = ""
                 service_data = {
-                    "topic": config_topic,
-                    "payload": str(payload),
-                    "retain": retain,
-                    "qos": qos,
+                    KEY_TOPIC: config_topic,
+                    KEY_PAYLOAD: str(payload),
+                    KEY_RETAIN: retain,
+                    KEY_QOS: qos,
                 }
                 hass.services.call("mqtt", "publish", service_data, False)
 
@@ -602,47 +642,33 @@ else:
             if data.get(id) or data.get(id.lower()):
                 if (data.get(id) or data.get(id.lower())) == ATTR_AC_POWER:
                     expire_after = "7200"
-            if battery_powered:
-                payload = (
-                    '{"name":"' + sensor_name + '",'
-                    '"stat_t":"' + state_topic + '",'
-                    '"unit_of_meas":"' + sensors_units[sensor_id] + '",'
-                    '"dev_cla":"' + sensors_classes[sensor_id] + '",'
-                    '"val_tpl":"' + sensors_tpls[sensor_id] + '",'
-                    '"exp_aft":"' + expire_after + '",'
-                    '"uniq_id":"' + unique_id + '",'
-                    '"qos":"' + str(qos) + '",'
-                    '"dev": {"ids": ["' + mac + '"],'
-                    '"name":"' + device_name + '",'
-                    '"mdl":"' + model + '",'
-                    '"sw":"' + fw_ver + '",'
-                    '"mf":"' + ATTR_MANUFACTURER + '"},'
-                    '"~":"' + default_topic + '"}'
-                )
-            else:
-                payload = (
-                    '{"name":"' + sensor_name + '",'
-                    '"stat_t":"' + state_topic + '",'
-                    '"unit_of_meas":"' + sensors_units[sensor_id] + '",'
-                    '"dev_cla":"' + sensors_classes[sensor_id] + '",'
-                    '"val_tpl":"' + sensors_tpls[sensor_id] + '",'
-                    '"avty_t":"' + availability_topic + '",'
-                    '"pl_avail":"true",'
-                    '"pl_not_avail":"false",'
-                    '"uniq_id":"' + unique_id + '",'
-                    '"qos":"' + str(qos) + '",'
-                    '"dev": {"ids": ["' + mac + '"],'
-                    '"name":"' + device_name + '",'
-                    '"mdl":"' + model + '",'
-                    '"sw":"' + fw_ver + '",'
-                    '"mf":"' + ATTR_MANUFACTURER + '"},'
-                    '"~":"' + default_topic + '"}'
-                )
+            payload = {
+                KEY_NAME: sensor_name,
+                KEY_STATE_TOPIC: state_topic,
+                KEY_UNIT: sensors_units[sensor_id],
+                KEY_DEVICE_CLASS: sensors_classes[sensor_id],
+                KEY_VALUE_TEMPLATE: sensors_tpls[sensor_id],
+                KEY_EXPIRE_AFTER: expire_after,
+                KEY_UNIQUE_ID: unique_id,
+                KEY_QOS: str(qos),
+                KEY_DEVICE: {
+                    KEY_IDENTIFIERS: [mac],
+                    KEY_NAME: device_name,
+                    KEY_MODEL: model,
+                    KEY_SW_VERSION: fw_ver,
+                    KEY_MANUFACTURER: ATTR_MANUFACTURER,
+                },
+                "~": default_topic,
+            }
+            if not battery_powered:
+                payload[KEY_AVAILABILITY_TOPIC] = availability_topic
+                payload[KEY_PAYLOAD_AVAILABLE] = VALUE_TRUE
+                payload[KEY_PAYLOAD_NOT_AVAILABLE] = VALUE_FALSE
             service_data = {
-                "topic": config_topic,
-                "payload": payload,
-                "retain": retain,
-                "qos": qos,
+                KEY_TOPIC: config_topic,
+                KEY_PAYLOAD: str(payload),
+                KEY_RETAIN: retain,
+                KEY_QOS: qos,
             }
             hass.services.call("mqtt", "publish", service_data, False)
 
@@ -662,46 +688,32 @@ else:
                 state_topic = "~{}".format(bin_sensors[bin_sensor_id])
             else:
                 state_topic = "~sensor/{}".format(bin_sensors[bin_sensor_id])
-            if battery_powered:
-                payload = (
-                    '{"name":"' + sensor_name + '",'
-                    '"stat_t":"' + state_topic + '",'
-                    '"pl_on":"' + bin_sensors_pl[bin_sensor_id][ATTR_ON] + '",'
-                    '"pl_off":"' + bin_sensors_pl[bin_sensor_id][ATTR_OFF] + '",'
-                    '"dev_cla":"' + bin_sensors_classes[bin_sensor_id] + '",'
-                    '"uniq_id":"' + unique_id + '",'
-                    '"qos":"' + str(qos) + '",'
-                    '"dev": {"ids": ["' + mac + '"],'
-                    '"name":"' + device_name + '",'
-                    '"mdl":"' + model + '",'
-                    '"sw":"' + fw_ver + '",'
-                    '"mf":"' + ATTR_MANUFACTURER + '"},'
-                    '"~":"' + default_topic + '"}'
-                )
-            else:
-                payload = (
-                    '{"name":"' + sensor_name + '",'
-                    '"stat_t":"' + state_topic + '",'
-                    '"pl_on":"' + bin_sensors_pl[bin_sensor_id][ATTR_ON] + '",'
-                    '"pl_off":"' + bin_sensors_pl[bin_sensor_id][ATTR_OFF] + '",'
-                    '"avty_t":"' + availability_topic + '",'
-                    '"pl_avail":"true",'
-                    '"pl_not_avail":"false",'
-                    '"dev_cla":"' + bin_sensors_classes[bin_sensor_id] + '",'
-                    '"uniq_id":"' + unique_id + '",'
-                    '"qos":"' + str(qos) + '",'
-                    '"dev": {"ids": ["' + mac + '"],'
-                    '"name":"' + device_name + '",'
-                    '"mdl":"' + model + '",'
-                    '"sw":"' + fw_ver + '",'
-                    '"mf":"' + ATTR_MANUFACTURER + '"},'
-                    '"~":"' + default_topic + '"}'
-                )
+            payload = {
+                KEY_NAME: sensor_name,
+                KEY_STATE_TOPIC: state_topic,
+                KEY_PAYLOAD_ON: bin_sensors_pl[bin_sensor_id][ATTR_ON],
+                KEY_PAYLOAD_OFF: bin_sensors_pl[bin_sensor_id][ATTR_OFF],
+                KEY_DEVICE_CLASS: bin_sensors_classes[bin_sensor_id],
+                KEY_UNIQUE_ID: unique_id,
+                KEY_QOS: str(qos),
+                KEY_DEVICE: {
+                    KEY_IDENTIFIERS: [mac],
+                    KEY_NAME: device_name,
+                    KEY_MODEL: model,
+                    KEY_SW_VERSION: fw_ver,
+                    KEY_MANUFACTURER: ATTR_MANUFACTURER,
+                },
+                "~": default_topic
+            }
+            if not battery_powered:
+                payload[KEY_AVAILABILITY_TOPIC] = availability_topic
+                payload[KEY_PAYLOAD_AVAILABLE] = VALUE_TRUE
+                payload[KEY_PAYLOAD_NOT_AVAILABLE] = VALUE_FALSE
             service_data = {
-                "topic": config_topic,
-                "payload": payload,
-                "retain": retain,
-                "qos": qos,
+                KEY_TOPIC: config_topic,
+                KEY_PAYLOAD: str(payload),
+                KEY_RETAIN: retain,
+                KEY_QOS: qos,
             }
             hass.services.call("mqtt", "publish", service_data, False)
 
@@ -719,69 +731,48 @@ else:
                 config_light = data.get(id)
             elif data.get(id.lower()):
                 config_light = data.get(id.lower())
+            payload = {
+                KEY_SCHEMA: VALUE_TEMPLATE,
+                KEY_NAME: light_name,
+                KEY_COMMAND_TOPIC: command_topic,
+                KEY_STATE_TOPIC: state_topic,
+                KEY_COMMAND_OFF_TEMPLATE: {"turn": "off"},
+                KEY_BRIGHTNESS_TEMPLATE: "{{ value_json.gain | float | multiply(2.55) | round(0) }}",
+                KEY_RED_TEMPLATE: "{{ value_json.red }}",
+                KEY_GREEN_TEMPLATE: "{{ value_json.green }}",
+                KEY_BLUE_TEMPLATE: "{{ value_json.blue }}",
+                KEY_WHITE_VALUE_TEMPLATE: "{{ value_json.white }}",
+                KEY_AVAILABILITY_TOPIC: availability_topic,
+                KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
+                KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+                KEY_UNIQUE_ID: unique_id,
+                KEY_QOS: str(qos),
+                KEY_DEVICE: {
+                    KEY_IDENTIFIERS: [mac],
+                    KEY_NAME: device_name,
+                    KEY_MODEL: model,
+                    KEY_SW_VERSION: fw_ver,
+                    KEY_MANUFACTURER: ATTR_MANUFACTURER,
+                },
+                "~": default_topic,
+            }
             if config_light == ATTR_RGBW and model == ATTR_MODEL_SHELLYRGBW2:
-                payload = (
-                    '{"schema":"template",'
-                    '"name":"' + light_name + '",'
-                    '"cmd_t":"' + command_topic + '",'
-                    '"stat_t":"' + state_topic + '",'
-                    '"avty_t":"' + availability_topic + '",'
-                    '"pl_avail":"true",'
-                    '"pl_not_avail":"false",'
-                    '"fx_list":["Off", "Meteor Shower", "Gradual Change", "Flash"],'
-                    '"cmd_on_tpl":"{\\"turn\\":\\"on\\"{% if brightness is defined %},\\"gain\\":{{ brightness | float | multiply(0.3922) | round(0) }}{% endif %}{% if red is defined and green is defined and blue is defined %},\\"red\\":{{ red }},\\"green\\":{{ green }},\\"blue\\":{{ blue }}{% endif %}{% if white_value is defined %},\\"white\\":{{ white_value }}{% endif %}{% if effect is defined %}{% if effect == \\"Meteor Shower\\" %}\\"effect\\":1{% elif effect == \\"Gradual Change\\" %}\\"effect\\":2{% elif effect == \\"Breath\\" %}\\"effect\\":3{% elif effect == \\"Flash\\" %}\\"effect\\":4{% elif effect == \\"On/Off Gradual\\" %}\\"effect\\":5{% elif effect == \\"Red/Green Change\\" %}\\"effect\\":6{% else %}\\"effect\\":0{% endif %}{% else %}\\"effect\\":0{% endif %}}",'
-                    '"cmd_off_tpl":"{\\"turn\\":\\"off\\"}",'
-                    '"stat_tpl":"{% if value_json.ison %}on{% else %}off{% endif %}",'
-                    '"bri_tpl":"{{ value_json.gain | float | multiply(2.55) | round(0) }}",'
-                    '"r_tpl":"{{ value_json.red }}",'
-                    '"g_tpl":"{{ value_json.green }}",'
-                    '"b_tpl":"{{ value_json.blue }}",'
-                    '"whit_val_tpl":"{{ value_json.white }}",'
-                    '"fx_tpl":"{% if value_json.effect == 1 %}Meteor Shower{% elif value_json.effect == 2 %}Gradual Change{% elif value_json.effect == 3 %}Flash{% else %}Off{% endif %}",'
-                    '"uniq_id":"' + unique_id + '",'
-                    '"qos":"' + str(qos) + '",'
-                    '"dev": {"ids": ["' + mac + '"],'
-                    '"name":"' + device_name + '",'
-                    '"mdl":"' + model + '",'
-                    '"sw":"' + fw_ver + '",'
-                    '"mf":"' + ATTR_MANUFACTURER + '"},'
-                    '"~":"' + default_topic + '"}'
-                )
+                payload[KEY_EFFECT_LIST] = ["Off", "Meteor Shower", "Gradual Change", "Flash"],
+                payload[KEY_COMMAND_ON_TEMPLATE] = "{\"turn\":\"on\"{% if brightness is defined %},\"gain\":{{ brightness | float | multiply(0.3922) | round(0) }}{% endif %}{% if red is defined and green is defined and blue is defined %},\"red\":{{ red }},\"green\":{{ green }},\"blue\":{{ blue }}{% endif %}{% if white_value is defined %},\"white\":{{ white_value }}{% endif %}{% if effect is defined %}{% if effect == \"Meteor Shower\" %}\"effect\":1{% elif effect == \"Gradual Change\" %}\"effect\":2{% elif effect == \"Flash\" %}\"effect\":3{% else %}\"effect\":0{% endif %}{% else %}\"effect\":0{% endif %}}",
+                payload[KEY_STATE_TEMPLATE] = "{% if value_json.ison %}on{% else %}off{% endif %}",
+                payload[KEY_EFFECT_TEMPLATE] = "{% if value_json.effect == 1 %}Meteor Shower{% elif value_json.effect == 2 %}Gradual Change{% elif value_json.effect == 3 %}Flash{% else %}Off{% endif %}",
             elif config_light == ATTR_RGBW and model == ATTR_MODEL_SHELLYBULB:
-                payload = (
-                    '{"schema":"template",'
-                    '"name":"' + light_name + '",'
-                    '"cmd_t":"' + command_topic + '",'
-                    '"stat_t":"' + state_topic + '",'
-                    '"avty_t":"' + availability_topic + '",'
-                    '"pl_avail":"true",'
-                    '"pl_not_avail":"false",'
-                    '"fx_list":["Off", "Meteor Shower", "Gradual Change", "Breath", "Flash", "On/Off Gradual", "Red/Green Change"],'
-                    '"cmd_on_tpl":"{\\"turn\\":\\"on\\",\\"mode\\":\\"color\\",{% if red is defined and green is defined and blue is defined %}\\"red\\":{{ red }},\\"green\\":{{ green }},\\"blue\\":{{ blue }},{% endif %}{% if white_value is defined %}\\"white\\":{{ white_value }},{% endif %}{% if brightness is defined %}\\"gain\\":{{ brightness | float | multiply(0.3922) | round(0) }},{% endif %}{% if effect is defined %}{% if effect == \\"Meteor Shower\\" %}\\"effect\\":1{% elif effect == \\"Gradual Change\\" %}\\"effect\\":2{% elif effect == \\"Breath\\" %}\\"effect\\":3{% elif effect == \\"Flash\\" %}\\"effect\\":4{% elif effect == \\"On/Off Gradual\\" %}\\"effect\\":5{% elif effect == \\"Red/Green Change\\" %}\\"effect\\":6{% else %}\\"effect\\":0{% endif %}{% else %}\\"effect\\":0{% endif %}}",'
-                    '"cmd_off_tpl":"{\\"turn\\":\\"off\\",\\"mode\\":\\"color\\",\\"effect\\": 0}",'
-                    '"stat_tpl":"{% if value_json.ison == true and value_json.mode == \\"color\\" %}on{% else %}off{% endif %}",'
-                    '"bri_tpl":"{{ value_json.gain | float | multiply(2.55) | round(0) }}",'
-                    '"r_tpl":"{{ value_json.red }}",'
-                    '"g_tpl":"{{ value_json.green }}",'
-                    '"b_tpl":"{{ value_json.blue }}",'
-                    '"whit_val_tpl":"{{ value_json.white }}",'
-                    '"fx_tpl":"{% if value_json.effect == 1 %}Meteor Shower{% elif value_json.effect == 2 %}Gradual Change{% elif value_json.effect == 3 %}Breath{% elif value_json.effect == 4 %}Flash{% elif value_json.effect == 5 %}On/Off Gradual{% elif value_json.effect == 6 %}Red/Green Change{% else %}Off{% endif %}",'
-                    '"uniq_id":"' + unique_id + '",'
-                    '"qos":"' + str(qos) + '",'
-                    '"dev": {"ids": ["' + mac + '"],'
-                    '"name":"' + device_name + '",'
-                    '"mdl":"' + model + '",'
-                    '"sw":"' + fw_ver + '",'
-                    '"mf":"' + ATTR_MANUFACTURER + '"},'
-                    '"~":"' + default_topic + '"}'
-                )
+                payload[KEY_EFFECT_LIST] = ["Off", "Meteor Shower", "Gradual Change", "Breath", "Flash", "On/Off Gradual", "Red/Green Change"],
+                payload[KEY_COMMAND_ON_TEMPLATE] = "{\"turn\":\"on\",\"mode\":\"color\",{% if red is defined and green is defined and blue is defined %}\"red\":{{ red }},\"green\":{{ green }},\"blue\":{{ blue }},{% endif %}{% if white_value is defined %}\"white\":{{ white_value }},{% endif %}{% if brightness is defined %}\"gain\":{{ brightness | float | multiply(0.3922) | round(0) }},{% endif %}{% if effect is defined %}{% if effect == \"Meteor Shower\" %}\"effect\":1{% elif effect == \"Gradual Change\" %}\"effect\":2{% elif effect == \"Breath\" %}\"effect\":3{% elif effect == \"Flash\" %}\"effect\":4{% elif effect == \"On/Off Gradual\" %}\"effect\":5{% elif effect == \"Red/Green Change\" %}\"effect\":6{% else %}\"effect\":0{% endif %}{% else %}\"effect\":0{% endif %}}",
+                payload[KEY_STATE_TEMPLATE] = "{% if value_json.ison == true and value_json.mode == \"color\" %}on{% else %}off{% endif %}",
+                payload[KEY_EFFECT_TEMPLATE] = "{% if value_json.effect == 1 %}Meteor Shower{% elif value_json.effect == 2 %}Gradual Change{% elif value_json.effect == 3 %}Breath{% elif value_json.effect == 4 %}Flash{% elif value_json.effect == 5 %}On/Off Gradual{% elif value_json.effect == 6 %}Red/Green Change{% else %}Off{% endif %}",
             else:
                 payload = ""
             service_data = {
-                "topic": config_topic,
-                "payload": payload,
-                "retain": retain,
-                "qos": qos,
+                KEY_TOPIC: config_topic,
+                KEY_PAYLOAD: str(payload),
+                KEY_RETAIN: retain,
+                KEY_QOS: qos,
             }
             hass.services.call("mqtt", "publish", service_data, False)
 
@@ -798,29 +789,31 @@ else:
                 )
                 state_topic = "~color/{}/status".format(light_id)
                 if config_light == ATTR_RGBW:
-                    payload = (
-                        '{"name":"' + sensor_name + '",'
-                        '"stat_t":"' + state_topic + '",'
-                        '"val_tpl":"' + lights_bin_sensors_tpls[bin_sensor_id] + '",'
-                        '"avty_t":"' + availability_topic + '",'
-                        '"pl_avail":"true",'
-                        '"pl_not_avail":"false",'
-                        '"uniq_id":"' + unique_id + '",'
-                        '"qos":"' + str(qos) + '",'
-                        '"dev": {"ids": ["' + mac + '"],'
-                        '"name":"' + device_name + '",'
-                        '"mdl":"' + model + '",'
-                        '"sw":"' + fw_ver + '",'
-                        '"mf":"' + ATTR_MANUFACTURER + '"},'
-                        '"~":"' + default_topic + '"}'
-                    )
+                    payload = {
+                        KEY_NAME: sensor_name,
+                        KEY_STATE_TOPIC: state_topic,
+                        KEY_VALUE_TEMPLATE: lights_bin_sensors_tpls[bin_sensor_id],
+                        KEY_AVAILABILITY_TOPIC: availability_topic,
+                        KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                        KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+                        KEY_UNIQUE_ID: unique_id,
+                        KEY_QOS: str(qos),
+                        KEY_DEVICE: {
+                            KEY_IDENTIFIERS: [mac],
+                            KEY_NAME: device_name,
+                            KEY_MODEL: model,
+                            KEY_SW_VERSION: fw_ver,
+                            KEY_MANUFACTURER: ATTR_MANUFACTURER,
+                        },
+                        "~": default_topic,
+                    }
                 else:
                     payload = ""
                 service_data = {
-                    "topic": config_topic,
-                    "payload": payload,
-                    "retain": retain,
-                    "qos": qos,
+                    KEY_TOPIC: config_topic,
+                    KEY_PAYLOAD: str(payload),
+                    KEY_RETAIN: retain,
+                    KEY_QOS: qos,
                 }
                 hass.services.call("mqtt", "publish", service_data, False)
 
@@ -837,31 +830,33 @@ else:
                 )
                 state_topic = "~color/{}/status".format(light_id)
                 if config_light == ATTR_RGBW:
-                    payload = (
-                        '{"name":"' + sensor_name + '",'
-                        '"stat_t":"' + state_topic + '",'
-                        '"unit_of_meas":"' + lights_sensors_units[sensor_id] + '",'
-                        '"dev_cla":"' + lights_sensors_classes[sensor_id] + '",'
-                        '"val_tpl":"' + lights_sensors_tpls[sensor_id] + '",'
-                        '"avty_t":"' + availability_topic + '",'
-                        '"pl_avail":"true",'
-                        '"pl_not_avail":"false",'
-                        '"uniq_id":"' + unique_id + '",'
-                        '"qos":"' + str(qos) + '",'
-                        '"dev": {"ids": ["' + mac + '"],'
-                        '"name":"' + device_name + '",'
-                        '"mdl":"' + model + '",'
-                        '"sw":"' + fw_ver + '",'
-                        '"mf":"' + ATTR_MANUFACTURER + '"},'
-                        '"~":"' + default_topic + '"}'
-                    )
+                    payload = {
+                        KEY_NAME: sensor_name,
+                        KEY_STATE_TOPIC: state_topic,
+                        KEY_UNIT: lights_sensors_units[sensor_id],
+                        KEY_DEVICE_CLASS: lights_sensors_classes[sensor_id],
+                        KEY_VALUE_TEMPLATE: lights_sensors_tpls[sensor_id],
+                        KEY_AVAILABILITY_TOPIC: availability_topic,
+                        KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                        KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+                        KEY_UNIQUE_ID: unique_id,
+                        KEY_QOS: str(qos),
+                        KEY_DEVICE: {
+                            KEY_IDENTIFIERS: [mac],
+                            KEY_NAME: device_name,
+                            KEY_MODEL: model,
+                            KEY_SW_VERSION: fw_ver,
+                            KEY_MANUFACTURER: ATTR_MANUFACTURER,
+                        },
+                        "~": default_topic,
+                    }
                 else:
                     payload = ""
                 service_data = {
-                    "topic": config_topic,
-                    "payload": payload,
-                    "retain": retain,
-                    "qos": qos,
+                    KEY_TOPIC: config_topic,
+                    KEY_PAYLOAD: str(payload),
+                    KEY_RETAIN: retain,
+                    KEY_QOS: qos,
                 }
                 hass.services.call("mqtt", "publish", service_data, False)
 
@@ -885,57 +880,39 @@ else:
                 config_light = data.get(id)
             elif data.get(id.lower()):
                 config_light = data.get(id.lower())
+            payload = {
+                KEY_SCHEMA: VALUE_TEMPLATE,
+                KEY_NAME: light_name,
+                KEY_COMMAND_TOPIC: command_topic,
+                KEY_STATE_TOPIC: state_topic,
+                KEY_COMMAND_OFF_TEMPLATE: {"turn": "off"},
+                KEY_STATE_TEMPLATE: "{% if value_json.ison %}on{% else %}off{% endif %}",
+                KEY_BRIGHTNESS_TEMPLATE: "{{ value_json.brightness | float | multiply(2.55) | round(0) }}",
+                KEY_AVAILABILITY_TOPIC: availability_topic,
+                KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
+                KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+                KEY_UNIQUE_ID: unique_id,
+                KEY_QOS: str(qos),
+                KEY_DEVICE: {
+                    KEY_IDENTIFIERS: [mac],
+                    KEY_NAME: device_name,
+                    KEY_MODEL: model,
+                    KEY_SW_VERSION: fw_ver,
+                    KEY_MANUFACTURER: ATTR_MANUFACTURER,
+                },
+                "~": default_topic,
+            }
             if config_light == ATTR_WHITE and model == ATTR_MODEL_SHELLYRGBW2:
-                payload = (
-                    '{"schema":"template",'
-                    '"name":"' + light_name + '",'
-                    '"cmd_t":"' + command_topic + '",'
-                    '"stat_t":"' + state_topic + '",'
-                    '"avty_t":"' + availability_topic + '",'
-                    '"pl_avail":"true",'
-                    '"pl_not_avail":"false",'
-                    '"cmd_on_tpl":"{\\"turn\\":\\"on\\"{% if brightness is defined %},\\"brightness\\":{{brightness | float | multiply(0.3922) | round(0)}}{% endif %}{% if white_value is defined %},\\"white\\":{{ white_value }}{% endif %}{% if effect is defined %},\\"effect\\":{{ effect }}{% endif %}}",'
-                    '"cmd_off_tpl":"{\\"turn\\":\\"off\\"}",'
-                    '"stat_tpl":"{% if value_json.ison %}on{% else %}off{% endif %}",'
-                    '"bri_tpl":"{{ value_json.brightness | float | multiply(2.55) | round(0) }}",'
-                    '"uniq_id":"' + unique_id + '",'
-                    '"qos":"' + str(qos) + '",'
-                    '"dev": {"ids": ["' + mac + '"],'
-                    '"name":"' + device_name + '",'
-                    '"mdl":"' + model + '",'
-                    '"sw":"' + fw_ver + '",'
-                    '"mf":"' + ATTR_MANUFACTURER + '"},'
-                    '"~":"' + default_topic + '"}'
-                )
+                payload[KEY_COMMAND_ON_TEMPLATE] = "{\"turn\":\"on\"{% if brightness is defined %},\"brightness\":{{brightness | float | multiply(0.3922) | round(0)}}{% endif %}{% if white_value is defined %},\"white\":{{ white_value }}{% endif %}{% if effect is defined %},\"effect\":{{ effect }}{% endif %}}"
             elif model == ATTR_MODEL_SHELLYDIMMER:
-                payload = (
-                    '{"schema":"template",'
-                    '"name":"' + light_name + '",'
-                    '"cmd_t":"' + command_topic + '",'
-                    '"stat_t":"' + state_topic + '",'
-                    '"avty_t":"' + availability_topic + '",'
-                    '"pl_avail":"true",'
-                    '"pl_not_avail":"false",'
-                    '"cmd_on_tpl":"{\\"turn\\":\\"on\\"{% if brightness is defined %},\\"brightness\\":{{brightness | float | multiply(0.3922) | round(0)}}{% endif %}}",'
-                    '"cmd_off_tpl":"{\\"turn\\":\\"off\\"}",'
-                    '"stat_tpl":"{% if value_json.ison %}on{% else %}off{% endif %}",'
-                    '"bri_tpl":"{{ value_json.brightness | float | multiply(2.55) | round(0) }}",'
-                    '"uniq_id":"' + unique_id + '",'
-                    '"qos":"' + str(qos) + '",'
-                    '"dev": {"ids": ["' + mac + '"],'
-                    '"name":"' + device_name + '",'
-                    '"mdl":"' + model + '",'
-                    '"sw":"' + fw_ver + '",'
-                    '"mf":"' + ATTR_MANUFACTURER + '"},'
-                    '"~":"' + default_topic + '"}'
-                )
+                payload[KEY_COMMAND_ON_TEMPLATE] = "{\"turn\":\"on\"{% if brightness is defined %},\"brightness\":{{brightness | float | multiply(0.3922) | round(0)}}{% endif %}}"
             else:
                 payload = ""
             service_data = {
-                "topic": config_topic,
-                "payload": payload,
-                "retain": retain,
-                "qos": qos,
+                KEY_TOPIC: config_topic,
+                KEY_PAYLOAD: str(payload),
+                KEY_RETAIN: retain,
+                KEY_QOS: qos,
             }
             hass.services.call("mqtt", "publish", service_data, False)
 
@@ -973,10 +950,10 @@ else:
                 else:
                     payload = ""
                 service_data = {
-                    "topic": config_topic,
-                    "payload": str(payload),
-                    "retain": retain,
-                    "qos": qos,
+                    KEY_TOPIC: config_topic,
+                    KEY_PAYLOAD: str(payload),
+                    KEY_RETAIN: retain,
+                    KEY_QOS: qos,
                 }
                 hass.services.call("mqtt", "publish", service_data, False)
 
@@ -998,31 +975,33 @@ else:
                 else:
                     state_topic = "~white/{}/status".format(light_id)
                 if config_light != ATTR_RGBW or model == ATTR_MODEL_SHELLYDIMMER:
-                    payload = (
-                        '{"name":"' + sensor_name + '",'
-                        '"stat_t":"' + state_topic + '",'
-                        '"unit_of_meas":"' + lights_sensors_units[sensor_id] + '",'
-                        '"dev_cla":"' + lights_sensors_classes[sensor_id] + '",'
-                        '"val_tpl":"' + lights_sensors_tpls[sensor_id] + '",'
-                        '"avty_t":"' + availability_topic + '",'
-                        '"pl_avail":"true",'
-                        '"pl_not_avail":"false",'
-                        '"uniq_id":"' + unique_id + '",'
-                        '"qos":"' + str(qos) + '",'
-                        '"dev": {"ids": ["' + mac + '"],'
-                        '"name":"' + device_name + '",'
-                        '"mdl":"' + model + '",'
-                        '"sw":"' + fw_ver + '",'
-                        '"mf":"' + ATTR_MANUFACTURER + '"},'
-                        '"~":"' + default_topic + '"}'
-                    )
+                    payload = {
+                        KEY_NAME: sensor_name,
+                        KEY_STATE_TOPIC: state_topic,
+                        KEY_UNIT: lights_sensors_units[sensor_id],
+                        KEY_DEVICE_CLASS: lights_sensors_classes[sensor_id],
+                        KEY_VALUE_TEMPLATE: lights_sensors_tpls[sensor_id],
+                        KEY_AVAILABILITY_TOPIC: availability_topic,
+                        KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                        KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+                        KEY_UNIQUE_ID: unique_id,
+                        KEY_QOS: str(qos),
+                        KEY_DEVICE: {
+                            KEY_IDENTIFIERS: [mac],
+                            KEY_NAME: device_name,
+                            KEY_MODEL: model,
+                            KEY_SW_VERSION: fw_ver,
+                            KEY_MANUFACTURER: ATTR_MANUFACTURER,
+                        },
+                        "~": default_topic,
+                    }
                 else:
                     payload = ""
                 service_data = {
-                    "topic": config_topic,
-                    "payload": payload,
-                    "retain": retain,
-                    "qos": qos,
+                    KEY_TOPIC: config_topic,
+                    KEY_PAYLOAD: str(payload),
+                    KEY_RETAIN: retain,
+                    KEY_QOS: qos,
                 }
                 hass.services.call("mqtt", "publish", service_data, False)
 
@@ -1044,47 +1023,31 @@ else:
                     device_name, meters_sensors[sensor_id].capitalize(), meter_id
                 )
                 state_topic = "~emeter/{}/{}".format(meter_id, meters_sensors[sensor_id])
+                payload = {
+                    KEY_NAME: sensor_name,
+                    KEY_STATE_TOPIC: state_topic,
+                    KEY_UNIT: meters_sensors_units[sensor_id],
+                    KEY_VALUE_TEMPLATE: meters_sensors_tpls[sensor_id],
+                    KEY_AVAILABILITY_TOPIC: availability_topic,
+                    KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                    KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+                    KEY_UNIQUE_ID: unique_id,
+                    KEY_QOS: str(qos),
+                    KEY_DEVICE: {
+                        KEY_IDENTIFIERS: [mac],
+                        KEY_NAME: device_name,
+                        KEY_MODEL: model,
+                        KEY_SW_VERSION: fw_ver,
+                        KEY_MANUFACTURER: ATTR_MANUFACTURER,
+                    },
+                    "~": default_topic,
+                }
                 if meters_sensors_classes[sensor_id]:
-                    payload = (
-                        '{"name":"' + sensor_name + '",'
-                        '"stat_t":"' + state_topic + '",'
-                        '"unit_of_meas":"' + meters_sensors_units[sensor_id] + '",'
-                        '"val_tpl":"' + meters_sensors_tpls[sensor_id] + '",'
-                        '"dev_cla":"' + meters_sensors_classes[sensor_id] + '",'
-                        '"avty_t":"' + availability_topic + '",'
-                        '"pl_avail":"true",'
-                        '"pl_not_avail":"false",'
-                        '"uniq_id":"' + unique_id + '",'
-                        '"qos":"' + str(qos) + '",'
-                        '"dev": {"ids": ["' + mac + '"],'
-                        '"name":"' + device_name + '",'
-                        '"mdl":"' + model + '",'
-                        '"sw":"' + fw_ver + '",'
-                        '"mf":"' + ATTR_MANUFACTURER + '"},'
-                        '"~":"' + default_topic + '"}'
-                    )
-                else:
-                    payload = (
-                        '{"name":"' + sensor_name + '",'
-                        '"stat_t":"' + state_topic + '",'
-                        '"unit_of_meas":"' + meters_sensors_units[sensor_id] + '",'
-                        '"val_tpl":"' + meters_sensors_tpls[sensor_id] + '",'
-                        '"avty_t":"' + availability_topic + '",'
-                        '"pl_avail":"true",'
-                        '"pl_not_avail":"false",'
-                        '"uniq_id":"' + unique_id + '",'
-                        '"qos":"' + str(qos) + '",'
-                        '"dev": {"ids": ["' + mac + '"],'
-                        '"name":"' + device_name + '",'
-                        '"mdl":"' + model + '",'
-                        '"sw":"' + fw_ver + '",'
-                        '"mf":"' + ATTR_MANUFACTURER + '"},'
-                        '"~":"' + default_topic + '"}'
-                    )
+                    payload[KEY_DEVICE_CLASS] = meters_sensors_classes[sensor_id]
                 service_data = {
-                    "topic": config_topic,
-                    "payload": payload,
-                    "retain": retain,
-                    "qos": qos,
+                    KEY_TOPIC: config_topic,
+                    KEY_PAYLOAD: str(payload),
+                    KEY_RETAIN: retain,
+                    KEY_QOS: qos,
                 }
                 hass.services.call("mqtt", "publish", service_data, False)

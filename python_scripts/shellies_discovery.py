@@ -1,6 +1,58 @@
 """
 This script adds MQTT discovery support for Shellies devices.
 """
+ATTR_MANUFACTURER = "Allterco Robotics"
+
+ATTR_MODEL_SHELLY1 = "Shelly1"
+ATTR_MODEL_SHELLY1PM = "Shelly1PM"
+ATTR_MODEL_SHELLY2 = "Shelly2"
+ATTR_MODEL_SHELLY25 = "Shelly2.5"
+ATTR_MODEL_SHELLY4PRO = "Shelly4Pro"
+ATTR_MODEL_SHELLYBULB = "Shelly Bulb"
+ATTR_MODEL_SHELLYDIMMER = "Shelly Dimmer"
+ATTR_MODEL_SHELLYEM = "ShellyEM"
+ATTR_MODEL_SHELLYFLOOD = "Shelly Flood"
+ATTR_MODEL_SHELLYHT = "Shelly H&T"
+ATTR_MODEL_SHELLYPLUG = "Shelly Plug"
+ATTR_MODEL_SHELLYPLUG_S = "Shelly Plug S"
+ATTR_MODEL_SHELLYRGBW2 = "Shelly RGBW2"
+ATTR_MODEL_SHELLYSENSE = "Shelly Sense"
+ATTR_MODEL_SHELLYSMOKE = "Shelly Smoke"
+
+ATTR_AC_POWER = "ac_power"
+ATTR_BATTERY = "battery"
+ATTR_CHARGER = "charger"
+ATTR_COVER = "cover"
+ATTR_ENERGY = "energy"
+ATTR_FAN = "fan"
+ATTR_FLOOD = "flood"
+ATTR_HEAT = "heat"
+ATTR_HUMIDITY = "humidity"
+ATTR_ILLUMINANCE = "illuminance"
+ATTR_INPUT = "input"
+ATTR_LIGHT = "light"
+ATTR_LOADERROR = "loaderror"
+ATTR_LONGPUSH = "longpush"
+ATTR_LUX = "lux"
+ATTR_MOISTURE = "moisture"
+ATTR_MOTION = "motion"
+ATTR_OFF = "off"
+ATTR_ON = "on"
+ATTR_OVERLOAD = "overload"
+ATTR_OVERPOWER = "overpower"
+ATTR_OVERTEMPERATURE = "overtemperature"
+ATTR_POWER = "power"
+ATTR_PROBLEM = "problem"
+ATTR_REACTIVE_POWER = "reactive_power"
+ATTR_RETURNED_ENERGY = "returned_energy"
+ATTR_RGBW = "rgbw"
+ATTR_SHELLY = "Shelly"
+ATTR_SMOKE = "smoke"
+ATTR_SWITCH = "switch"
+ATTR_TEMPERATURE = "temperature"
+ATTR_VOLTAGE = "voltage"
+ATTR_WHITE = "white"
+
 ATTR_TPL_TEMPERATURE = "{{ value | float | round(1) }}"
 ATTR_TPL_HUMIDITY = "{{ value | float | round(1) }}"
 ATTR_TPL_LUX = "{{ value | float | round }}"
@@ -10,66 +62,6 @@ ATTR_TPL_VOLTAGE = "{{ value | float | round(1) }}"
 ATTR_TPL_ENERGY = "{{ (value | float / 60 / 1000) | round(2) }}"
 ATTR_TPL_BATTERY = "{{ value | float | round }}"
 ATTR_TPL_OVERPOWER = "{% if value_json.overpower == true %}ON{% else %}OFF{% endif %}"
-
-ATTR_MANUFACTURER = "Allterco Robotics"
-ATTR_MODEL_SHELLY1 = "Shelly1"
-ATTR_MODEL_SHELLY1PM = "Shelly1PM"
-ATTR_MODEL_SHELLY2 = "Shelly2"
-ATTR_MODEL_SHELLY25 = "Shelly2.5"
-ATTR_MODEL_SHELLYPLUG = "Shelly Plug"
-ATTR_MODEL_SHELLYPLUG_S = "Shelly Plug S"
-ATTR_MODEL_SHELLY4PRO = "Shelly4Pro"
-ATTR_MODEL_SHELLYHT = "Shelly H&T"
-ATTR_MODEL_SHELLYSMOKE = "Shelly Smoke"
-ATTR_MODEL_SHELLYSENSE = "Shelly Sense"
-ATTR_MODEL_SHELLYRGBW2 = "Shelly RGBW2"
-ATTR_MODEL_SHELLYBULB = "Shelly Bulb"
-ATTR_MODEL_SHELLYEM = "ShellyEM"
-ATTR_MODEL_SHELLYFLOOD = "Shelly Flood"
-ATTR_MODEL_SHELLYDIMMER = "Shelly Dimmer"
-
-ATTR_SHELLY = "Shelly"
-ATTR_TEMPERATURE = "temperature"
-ATTR_HUMIDITY = "humidity"
-ATTR_BATTERY = "battery"
-ATTR_LUX = "lux"
-ATTR_ILLUMINANCE = "illuminance"
-ATTR_POWER = "power"
-ATTR_PROBLEM = "problem"
-ATTR_REACTIVE_POWER = "reactive_power"
-ATTR_VOLTAGE = "voltage"
-ATTR_ENERGY = "energy"
-ATTR_RETURNED_ENERGY = "returned_energy"
-ATTR_SWITCH = "switch"
-ATTR_LIGHT = "light"
-ATTR_RGBW = "rgbw"
-ATTR_WHITE = "white"
-ATTR_FAN = "fan"
-ATTR_SMOKE = "smoke"
-ATTR_FLOOD = "flood"
-ATTR_MOISTURE = "moisture"
-ATTR_MOTION = "motion"
-ATTR_CHARGER = "charger"
-ATTR_INPUT = "input"
-ATTR_LONGPUSH = "longpush"
-ATTR_OVERTEMPERATURE = "overtemperature"
-ATTR_OVERPOWER = "overpower"
-ATTR_OVERLOAD = "overload"
-ATTR_LOADERROR = "loaderror"
-ATTR_HEAT = "heat"
-ATTR_COVER = "cover"
-ATTR_UNIT_W = "W"
-ATTR_UNIT_KWH = "kWh"
-ATTR_UNIT_V = "V"
-ATTR_UNIT_VAR = "VAR"
-ATTR_UNIT_PERCENT = "%"
-ATTR_UNIT_LUX = "lx"
-ATTR_UNIT_CELSIUS = "°C"
-ATTR_ON = "on"
-ATTR_OFF = "off"
-ATTR_TRUE_FALSE_PL = {ATTR_ON: "true", ATTR_OFF: "false"}
-ATTR_1_0_PL = {ATTR_ON: "1", ATTR_OFF: "0"}
-ATTR_AC_POWER = "ac_power"
 
 CONF_DEVELOP = "develop"
 CONF_DISCOVERY_PREFIX = "discovery_prefix"
@@ -95,8 +87,19 @@ KEY_QOS = "qos"
 KEY_SW_VERSION = "sw"
 KEY_VALUE_TEMPLATE = "val_tpl"
 
+UNIT_CELSIUS = "°C"
+UNIT_KWH = "kWh"
+UNIT_LUX = "lx"
+UNIT_PERCENT = "%"
+UNIT_V = "V"
+UNIT_VAR = "VAR"
+UNIT_W = "W"
+
 VALUE_FALSE = False
 VALUE_TRUE = True
+
+ATTR_1_0_PL = {ATTR_ON: "1", ATTR_OFF: "0"}
+ATTR_TRUE_FALSE_PL = {ATTR_ON: VALUE_TRUE, ATTR_OFF: VALUE_FALSE}
 
 expire_after = 43200
 
@@ -170,14 +173,14 @@ else:
             model = ATTR_MODEL_SHELLY1PM
             relays = 1
             relays_sensors = [ATTR_POWER, ATTR_ENERGY]
-            relays_sensors_units = [ATTR_UNIT_W, ATTR_UNIT_KWH]
+            relays_sensors_units = [UNIT_W, UNIT_KWH]
             relays_sensors_classes = [ATTR_POWER, ATTR_POWER]
             relays_sensors_tpls = [ATTR_TPL_POWER, ATTR_TPL_ENERGY]
             relays_bin_sensors = [ATTR_INPUT, ATTR_LONGPUSH]
             relays_bin_sensors_pl = [ATTR_1_0_PL, ATTR_1_0_PL]
             sensors = [ATTR_TEMPERATURE]
             sensors_classes = sensors
-            sensors_units = [ATTR_UNIT_CELSIUS]
+            sensors_units = [UNIT_CELSIUS]
             sensors_tpls = [ATTR_TPL_TEMPERATURE]
             bin_sensors = [ATTR_OVERTEMPERATURE]
             bin_sensors_classes = [ATTR_HEAT]
@@ -188,7 +191,7 @@ else:
             relays = 2
             rollers = 1
             relays_sensors = [ATTR_POWER, ATTR_ENERGY]
-            relays_sensors_units = [ATTR_UNIT_W, ATTR_UNIT_KWH]
+            relays_sensors_units = [UNIT_W, UNIT_KWH]
             relays_sensors_classes = [ATTR_POWER, ATTR_POWER]
             relays_sensors_tpls = [ATTR_TPL_POWER, ATTR_TPL_ENERGY]
             relays_bin_sensors = [ATTR_INPUT, ATTR_LONGPUSH]
@@ -199,14 +202,14 @@ else:
             relays = 2
             rollers = 1
             relays_sensors = [ATTR_POWER, ATTR_ENERGY]
-            relays_sensors_units = [ATTR_UNIT_W, ATTR_UNIT_KWH]
+            relays_sensors_units = [UNIT_W, UNIT_KWH]
             relays_sensors_classes = [ATTR_POWER, ATTR_POWER]
             relays_sensors_tpls = [ATTR_TPL_POWER, ATTR_TPL_ENERGY]
             relays_bin_sensors = [ATTR_INPUT, ATTR_LONGPUSH]
             relays_bin_sensors_pl = [ATTR_1_0_PL, ATTR_1_0_PL]
             sensors = [ATTR_TEMPERATURE]
             sensors_classes = sensors
-            sensors_units = [ATTR_UNIT_CELSIUS]
+            sensors_units = [UNIT_CELSIUS]
             sensors_tpls = [ATTR_TPL_TEMPERATURE]
             bin_sensors = [ATTR_OVERTEMPERATURE]
             bin_sensors_classes = [ATTR_HEAT]
@@ -216,7 +219,7 @@ else:
             model = ATTR_MODEL_SHELLYPLUG
             relays = 1
             relays_sensors = [ATTR_POWER, ATTR_ENERGY]
-            relays_sensors_units = [ATTR_UNIT_W, ATTR_UNIT_KWH]
+            relays_sensors_units = [UNIT_W, UNIT_KWH]
             relays_sensors_classes = [ATTR_POWER, ATTR_POWER]
             relays_sensors_tpls = [ATTR_TPL_POWER, ATTR_TPL_ENERGY]
 
@@ -224,12 +227,12 @@ else:
             model = ATTR_MODEL_SHELLYPLUG_S
             relays = 1
             relays_sensors = [ATTR_POWER, ATTR_ENERGY]
-            relays_sensors_units = [ATTR_UNIT_W, ATTR_UNIT_KWH]
+            relays_sensors_units = [UNIT_W, UNIT_KWH]
             relays_sensors_classes = [ATTR_POWER, ATTR_POWER]
             relays_sensors_tpls = [ATTR_TPL_POWER, ATTR_TPL_ENERGY]
             sensors = [ATTR_TEMPERATURE]
             sensors_classes = [ATTR_TEMPERATURE]
-            sensors_units = [ATTR_UNIT_CELSIUS]
+            sensors_units = [UNIT_CELSIUS]
             sensors_tpls = [ATTR_TPL_TEMPERATURE]
             bin_sensors = [ATTR_OVERTEMPERATURE]
             bin_sensors_classes = [ATTR_HEAT]
@@ -239,7 +242,7 @@ else:
             model = ATTR_MODEL_SHELLY4PRO
             relays = 4
             relays_sensors = [ATTR_POWER, ATTR_ENERGY]
-            relays_sensors_units = [ATTR_UNIT_W, ATTR_UNIT_KWH]
+            relays_sensors_units = [UNIT_W, UNIT_KWH]
             relays_sensors_classes = [ATTR_POWER, ATTR_POWER]
             relays_sensors_tpls = [ATTR_TPL_POWER, ATTR_TPL_ENERGY]
 
@@ -247,7 +250,7 @@ else:
             model = ATTR_MODEL_SHELLYHT
             sensors = [ATTR_TEMPERATURE, ATTR_HUMIDITY, ATTR_BATTERY]
             sensors_classes = sensors
-            sensors_units = [ATTR_UNIT_CELSIUS, ATTR_UNIT_PERCENT, ATTR_UNIT_PERCENT]
+            sensors_units = [UNIT_CELSIUS, UNIT_PERCENT, UNIT_PERCENT]
             sensors_tpls = [
                 ATTR_TPL_TEMPERATURE,
                 ATTR_TPL_HUMIDITY,
@@ -259,7 +262,7 @@ else:
             model = ATTR_MODEL_SHELLYSMOKE
             sensors = [ATTR_TEMPERATURE, ATTR_BATTERY]
             sensors_classes = sensors
-            sensors_units = [ATTR_UNIT_CELSIUS, ATTR_UNIT_PERCENT]
+            sensors_units = [UNIT_CELSIUS, UNIT_PERCENT]
             sensors_tpls = [ATTR_TPL_TEMPERATURE, ATTR_TPL_BATTERY]
             bin_sensors = [ATTR_SMOKE]
             bin_sensors_classes = bin_sensors
@@ -275,7 +278,7 @@ else:
                 ATTR_ILLUMINANCE,
                 ATTR_BATTERY,
             ]
-            sensors_units = [ATTR_UNIT_CELSIUS, ATTR_UNIT_PERCENT, ATTR_UNIT_LUX, ATTR_UNIT_PERCENT]
+            sensors_units = [UNIT_CELSIUS, UNIT_PERCENT, UNIT_LUX, UNIT_PERCENT]
             sensors_tpls = [
                 ATTR_TPL_TEMPERATURE,
                 ATTR_TPL_HUMIDITY,
@@ -293,7 +296,7 @@ else:
             white_lights = 4
             lights_sensors = [ATTR_POWER]
             lights_sensors_classes = [ATTR_POWER]
-            lights_sensors_units = [ATTR_UNIT_W]
+            lights_sensors_units = [UNIT_W]
             lights_sensors_tpls = ["{{ value_json.power | float | round(1) }}"]
             lights_bin_sensors = [ATTR_OVERPOWER]
             lights_bin_sensors_classes = [ATTR_POWER]
@@ -305,13 +308,13 @@ else:
             white_lights = 1
             sensors = [ATTR_TEMPERATURE]
             sensors_classes = [ATTR_TEMPERATURE]
-            sensors_units = [ATTR_UNIT_CELSIUS]
+            sensors_units = [UNIT_CELSIUS]
             sensors_tpls = [ATTR_TPL_TEMPERATURE]
             bin_sensors = [ATTR_OVERTEMPERATURE, ATTR_OVERLOAD, ATTR_LOADERROR]
             bin_sensors_classes = [ATTR_HEAT, ATTR_POWER, ATTR_PROBLEM]
             bin_sensors_pl = [ATTR_1_0_PL, ATTR_1_0_PL, ATTR_1_0_PL]
             lights_sensors = [ATTR_POWER]
-            lights_sensors_units = [ATTR_UNIT_W]
+            lights_sensors_units = [UNIT_W]
             lights_sensors_classes = [ATTR_POWER]
             lights_sensors_tpls = [ATTR_TPL_POWER]
 
@@ -323,7 +326,7 @@ else:
             model = ATTR_MODEL_SHELLYEM
             relays = 1
             relays_sensors = [ATTR_POWER, ATTR_ENERGY]
-            relays_sensors_units = [ATTR_UNIT_W, ATTR_UNIT_KWH]
+            relays_sensors_units = [UNIT_W, UNIT_KWH]
             relays_sensors_classes = [ATTR_POWER, ATTR_POWER]
             relays_sensors_tpls = [ATTR_TPL_POWER, ATTR_TPL_ENERGY]
             meters = 2
@@ -335,11 +338,11 @@ else:
                 ATTR_RETURNED_ENERGY,
             ]
             meters_sensors_units = [
-                ATTR_UNIT_W,
-                ATTR_UNIT_VAR,
-                ATTR_UNIT_V,
-                ATTR_UNIT_KWH,
-                ATTR_UNIT_KWH,
+                UNIT_W,
+                UNIT_VAR,
+                UNIT_V,
+                UNIT_KWH,
+                UNIT_KWH,
             ]
             meters_sensors_classes = [ATTR_POWER, None, None, ATTR_POWER, ATTR_POWER]
             meters_sensors_tpls = [
@@ -354,7 +357,7 @@ else:
             model = ATTR_MODEL_SHELLYFLOOD
             sensors = [ATTR_TEMPERATURE, ATTR_BATTERY]
             sensors_classes = sensors
-            sensors_units = [ATTR_UNIT_CELSIUS, ATTR_UNIT_PERCENT]
+            sensors_units = [UNIT_CELSIUS, UNIT_PERCENT]
             sensors_tpls = [ATTR_TPL_TEMPERATURE, ATTR_TPL_BATTERY]
             bin_sensors = [ATTR_FLOOD]
             bin_sensors_classes = [ATTR_MOISTURE]

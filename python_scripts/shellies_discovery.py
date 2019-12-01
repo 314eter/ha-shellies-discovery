@@ -732,7 +732,7 @@ else:
                 KEY_NAME: light_name,
                 KEY_COMMAND_TOPIC: command_topic,
                 KEY_STATE_TOPIC: state_topic,
-                KEY_COMMAND_OFF_TEMPLATE: "{\"turn\": \"off\"}",
+                KEY_COMMAND_OFF_TEMPLATE: '"{\"turn\": \"off\"}"',
                 KEY_BRIGHTNESS_TEMPLATE: "{{ value_json.gain | float | multiply(2.55) | round(0) }}",
                 KEY_RED_TEMPLATE: "{{ value_json.red }}",
                 KEY_GREEN_TEMPLATE: "{{ value_json.green }}",
@@ -754,13 +754,13 @@ else:
             }
             if config_light == ATTR_RGBW and model == ATTR_MODEL_SHELLYRGBW2:
                 payload[KEY_EFFECT_LIST] = ["Off", "Meteor Shower", "Gradual Change", "Flash"]
-                payload[KEY_COMMAND_ON_TEMPLATE] = "{\"turn\":\"on\"{% if brightness is defined %},\"gain\":{{ brightness | float | multiply(0.3922) | round(0) }}{% endif %}{% if red is defined and green is defined and blue is defined %},\"red\":{{ red }},\"green\":{{ green }},\"blue\":{{ blue }}{% endif %}{% if white_value is defined %},\"white\":{{ white_value }}{% endif %}{% if effect is defined %}{% if effect == \"Meteor Shower\" %}\"effect\":1{% elif effect == \"Gradual Change\" %}\"effect\":2{% elif effect == \"Flash\" %}\"effect\":3{% else %}\"effect\":0{% endif %}{% else %}\"effect\":0{% endif %}}"
+                payload[KEY_COMMAND_ON_TEMPLATE] = '"{\"turn\":\"on\"{% if brightness is defined %},\"gain\":{{ brightness | float | multiply(0.3922) | round(0) }}{% endif %}{% if red is defined and green is defined and blue is defined %},\"red\":{{ red }},\"green\":{{ green }},\"blue\":{{ blue }}{% endif %}{% if white_value is defined %},\"white\":{{ white_value }}{% endif %}{% if effect is defined %}{% if effect == \"Meteor Shower\" %}\"effect\":1{% elif effect == \"Gradual Change\" %}\"effect\":2{% elif effect == \"Flash\" %}\"effect\":3{% else %}\"effect\":0{% endif %}{% else %}\"effect\":0{% endif %}}"'
                 payload[KEY_STATE_TEMPLATE] = "{% if value_json.ison %}on{% else %}off{% endif %}"
                 payload[KEY_EFFECT_TEMPLATE] = "{% if value_json.effect == 1 %}Meteor Shower{% elif value_json.effect == 2 %}Gradual Change{% elif value_json.effect == 3 %}Flash{% else %}Off{% endif %}"
             elif config_light == ATTR_RGBW and model == ATTR_MODEL_SHELLYBULB:
                 payload[KEY_EFFECT_LIST] = ["Off", "Meteor Shower", "Gradual Change", "Breath", "Flash", "On/Off Gradual", "Red/Green Change"]
-                payload[KEY_COMMAND_ON_TEMPLATE] = "{\"turn\":\"on\",\"mode\":\"color\",{% if red is defined and green is defined and blue is defined %}\"red\":{{ red }},\"green\":{{ green }},\"blue\":{{ blue }},{% endif %}{% if white_value is defined %}\"white\":{{ white_value }},{% endif %}{% if brightness is defined %}\"gain\":{{ brightness | float | multiply(0.3922) | round(0) }},{% endif %}{% if effect is defined %}{% if effect == \"Meteor Shower\" %}\"effect\":1{% elif effect == \"Gradual Change\" %}\"effect\":2{% elif effect == \"Breath\" %}\"effect\":3{% elif effect == \"Flash\" %}\"effect\":4{% elif effect == \"On/Off Gradual\" %}\"effect\":5{% elif effect == \"Red/Green Change\" %}\"effect\":6{% else %}\"effect\":0{% endif %}{% else %}\"effect\":0{% endif %}}"
-                payload[KEY_STATE_TEMPLATE] = "{% if value_json.ison == true and value_json.mode == \"color\" %}on{% else %}off{% endif %}"
+                payload[KEY_COMMAND_ON_TEMPLATE] = '"{\"turn\":\"on\",\"mode\":\"color\",{% if red is defined and green is defined and blue is defined %}\"red\":{{ red }},\"green\":{{ green }},\"blue\":{{ blue }},{% endif %}{% if white_value is defined %}\"white\":{{ white_value }},{% endif %}{% if brightness is defined %}\"gain\":{{ brightness | float | multiply(0.3922) | round(0) }},{% endif %}{% if effect is defined %}{% if effect == \"Meteor Shower\" %}\"effect\":1{% elif effect == \"Gradual Change\" %}\"effect\":2{% elif effect == \"Breath\" %}\"effect\":3{% elif effect == \"Flash\" %}\"effect\":4{% elif effect == \"On/Off Gradual\" %}\"effect\":5{% elif effect == \"Red/Green Change\" %}\"effect\":6{% else %}\"effect\":0{% endif %}{% else %}\"effect\":0{% endif %}}"'
+                payload[KEY_STATE_TEMPLATE] = '"{% if value_json.ison == true and value_json.mode == \"color\" %}on{% else %}off{% endif %}"'
                 payload[KEY_EFFECT_TEMPLATE] = "{% if value_json.effect == 1 %}Meteor Shower{% elif value_json.effect == 2 %}Gradual Change{% elif value_json.effect == 3 %}Breath{% elif value_json.effect == 4 %}Flash{% elif value_json.effect == 5 %}On/Off Gradual{% elif value_json.effect == 6 %}Red/Green Change{% else %}Off{% endif %}"
             else:
                 payload = ""
@@ -885,7 +885,7 @@ else:
                 KEY_NAME: light_name,
                 KEY_COMMAND_TOPIC: command_topic,
                 KEY_STATE_TOPIC: state_topic,
-                KEY_COMMAND_OFF_TEMPLATE: "{\"turn\": \"off\"}",
+                KEY_COMMAND_OFF_TEMPLATE: '"{\"turn\": \"off\"}"',
                 KEY_STATE_TEMPLATE: "{% if value_json.ison %}on{% else %}off{% endif %}",
                 KEY_BRIGHTNESS_TEMPLATE: "{{ value_json.brightness | float | multiply(2.55) | round(0) }}",
                 KEY_AVAILABILITY_TOPIC: availability_topic,
@@ -903,9 +903,9 @@ else:
                 "~": default_topic,
             }
             if config_light == ATTR_WHITE and model == ATTR_MODEL_SHELLYRGBW2:
-                payload[KEY_COMMAND_ON_TEMPLATE] = "{\"turn\":\"on\"{% if brightness is defined %},\"brightness\":{{brightness | float | multiply(0.3922) | round(0)}}{% endif %}{% if white_value is defined %},\"white\":{{ white_value }}{% endif %}{% if effect is defined %},\"effect\":{{ effect }}{% endif %}}"
+                payload[KEY_COMMAND_ON_TEMPLATE] = '"{\"turn\":\"on\"{% if brightness is defined %},\"brightness\":{{brightness | float | multiply(0.3922) | round(0)}}{% endif %}{% if white_value is defined %},\"white\":{{ white_value }}{% endif %}{% if effect is defined %},\"effect\":{{ effect }}{% endif %}}"'
             elif model == ATTR_MODEL_SHELLYDIMMER:
-                payload[KEY_COMMAND_ON_TEMPLATE] = "{\"turn\":\"on\"{% if brightness is defined %},\"brightness\":{{brightness | float | multiply(0.3922) | round(0)}}{% endif %}}"
+                payload[KEY_COMMAND_ON_TEMPLATE] = '"{\"turn\":\"on\"{% if brightness is defined %},\"brightness\":{{brightness | float | multiply(0.3922) | round(0)}}{% endif %}}"'
             else:
                 payload = ""
             service_data = {

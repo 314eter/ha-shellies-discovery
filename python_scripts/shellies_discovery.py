@@ -99,10 +99,10 @@ KEY_PAYLOAD_OFF = "pl_off"
 KEY_PAYLOAD_ON = "pl_on"
 KEY_PAYLOAD_OPEN = "pl_open"
 KEY_PAYLOAD_STOP = "pl_stop"
-KEY_POSITION_TOPIC ="pos_t"
+KEY_POSITION_TOPIC = "pos_t"
 KEY_RED_TEMPLATE = "r_tpl"
 KEY_RETAIN = "retain"
-KEY_SCHEMA: "schema"
+KEY_SCHEMA = "schema"
 KEY_SET_POSITION_TOPIC = "set_pos_t"
 KEY_STATE_TEMPLATE = "stat_tpl"
 KEY_STATE_TOPIC = "stat_t"
@@ -122,13 +122,13 @@ UNIT_VAR = "VAR"
 UNIT_W = "W"
 
 VALUE_CLOSE = "close"
-VALUE_FALSE = False
+VALUE_FALSE = "false"
 VALUE_OFF = "off"
 VALUE_ON = "on"
 VALUE_OPEN = "open"
 VALUE_STOP = "stop"
 VALUE_TEMPLATE = "template"
-VALUE_TRUE = True
+VALUE_TRUE = "true"
 
 ATTR_1_0_PL = {ATTR_ON: "1", ATTR_OFF: "0"}
 ATTR_TRUE_FALSE_PL = {ATTR_ON: VALUE_TRUE, ATTR_OFF: VALUE_FALSE}
@@ -283,11 +283,7 @@ else:
             sensors = [ATTR_TEMPERATURE, ATTR_HUMIDITY, ATTR_BATTERY]
             sensors_classes = sensors
             sensors_units = [UNIT_CELSIUS, UNIT_PERCENT, UNIT_PERCENT]
-            sensors_tpls = [
-                ATTR_TPL_TEMPERATURE,
-                ATTR_TPL_HUMIDITY,
-                ATTR_TPL_BATTERY,
-            ]
+            sensors_tpls = [ATTR_TPL_TEMPERATURE, ATTR_TPL_HUMIDITY, ATTR_TPL_BATTERY]
             battery_powered = True
 
         if id[:-7] == "shellysmoke":
@@ -369,13 +365,7 @@ else:
                 ATTR_ENERGY,
                 ATTR_RETURNED_ENERGY,
             ]
-            meters_sensors_units = [
-                UNIT_W,
-                UNIT_VAR,
-                UNIT_V,
-                UNIT_KWH,
-                UNIT_KWH,
-            ]
+            meters_sensors_units = [UNIT_W, UNIT_VAR, UNIT_V, UNIT_KWH, UNIT_KWH]
             meters_sensors_classes = [ATTR_POWER, None, None, ATTR_POWER, ATTR_POWER]
             meters_sensors_tpls = [
                 ATTR_TPL_POWER,
@@ -427,10 +417,10 @@ else:
                     KEY_PAYLOAD_STOP: VALUE_STOP,
                     KEY_OPTIMISTIC: VALUE_FALSE,
                     KEY_AVAILABILITY_TOPIC: availability_topic,
-                    KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                    KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
                     KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
                     KEY_UNIQUE_ID: unique_id,
-                    KEY_QOS: str(qos),
+                    KEY_QOS: qos,
                     KEY_DEVICE: {
                         KEY_IDENTIFIERS: [mac],
                         KEY_NAME: device_name,
@@ -444,7 +434,7 @@ else:
                 payload = ""
             service_data = {
                 KEY_TOPIC: config_topic,
-                KEY_PAYLOAD: str(payload),
+                KEY_PAYLOAD: str(payload).replace("\'", "\""),
                 KEY_RETAIN: retain,
                 KEY_QOS: qos,
             }
@@ -475,10 +465,10 @@ else:
                         KEY_PAYLOAD_OFF: VALUE_OFF,
                         KEY_PAYLOAD_ON: VALUE_ON,
                         KEY_AVAILABILITY_TOPIC: availability_topic,
-                        KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                        KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
                         KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
                         KEY_UNIQUE_ID: unique_id,
-                        KEY_QOS: str(qos),
+                        KEY_QOS: qos,
                         KEY_DEVICE: {
                             KEY_IDENTIFIERS: [mac],
                             KEY_NAME: device_name,
@@ -492,7 +482,7 @@ else:
                     payload = ""
                 service_data = {
                     KEY_TOPIC: config_topic,
-                    KEY_PAYLOAD: str(payload),
+                    KEY_PAYLOAD: str(payload).replace("\'", "\""),
                     KEY_RETAIN: retain,
                     KEY_QOS: qos,
                 }
@@ -517,10 +507,10 @@ else:
                             KEY_DEVICE_CLASS: relays_sensors_classes[sensor_id],
                             KEY_VALUE_TEMPLATE: relays_sensors_tpls[sensor_id],
                             KEY_AVAILABILITY_TOPIC: availability_topic,
-                            KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                            KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
                             KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
                             KEY_UNIQUE_ID: unique_id,
-                            KEY_QOS: str(qos),
+                            KEY_QOS: qos,
                             KEY_DEVICE: {
                                 KEY_IDENTIFIERS: [mac],
                                 KEY_NAME: device_name,
@@ -534,7 +524,7 @@ else:
                         payload = ""
                     service_data = {
                         KEY_TOPIC: config_topic,
-                        KEY_PAYLOAD: str(payload),
+                        KEY_PAYLOAD: str(payload).replace("\'", "\""),
                         KEY_RETAIN: retain,
                         KEY_QOS: qos,
                     }
@@ -542,7 +532,9 @@ else:
 
             # relay's sensors
             for sensor_id in range(0, len(relays_sensors)):
-                unique_id = "{}-relay-{}-{}".format(id, relays_sensors[sensor_id], relay_id)
+                unique_id = "{}-relay-{}-{}".format(
+                    id, relays_sensors[sensor_id], relay_id
+                )
                 config_topic = "{}/sensor/{}-{}-{}/config".format(
                     disc_prefix, id, relays_sensors[sensor_id], relay_id
                 )
@@ -558,10 +550,10 @@ else:
                         KEY_DEVICE_CLASS: relays_sensors_classes[sensor_id],
                         KEY_VALUE_TEMPLATE: relays_sensors_tpls[sensor_id],
                         KEY_AVAILABILITY_TOPIC: availability_topic,
-                        KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                        KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
                         KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
                         KEY_UNIQUE_ID: unique_id,
-                        KEY_QOS: str(qos),
+                        KEY_QOS: qos,
                         KEY_DEVICE: {
                             KEY_IDENTIFIERS: [mac],
                             KEY_NAME: device_name,
@@ -575,7 +567,7 @@ else:
                     payload = ""
                 service_data = {
                     KEY_TOPIC: config_topic,
-                    KEY_PAYLOAD: str(payload),
+                    KEY_PAYLOAD: str(payload).replace("\'", "\""),
                     KEY_RETAIN: retain,
                     KEY_QOS: qos,
                 }
@@ -590,9 +582,13 @@ else:
                     disc_prefix, id, relays_bin_sensors[bin_sensor_id], relay_id
                 )
                 sensor_name = "{} {} {}".format(
-                    device_name, relays_bin_sensors[bin_sensor_id].capitalize(), relay_id
+                    device_name,
+                    relays_bin_sensors[bin_sensor_id].capitalize(),
+                    relay_id,
                 )
-                state_topic = "~{}/{}".format(relays_bin_sensors[bin_sensor_id], relay_id)
+                state_topic = "~{}/{}".format(
+                    relays_bin_sensors[bin_sensor_id], relay_id
+                )
                 if not roller_mode:
                     payload = {
                         KEY_NAME: sensor_name,
@@ -600,10 +596,10 @@ else:
                         KEY_PAYLOAD_ON: relays_bin_sensors_pl[bin_sensor_id][ATTR_ON],
                         KEY_PAYLOAD_OFF: relays_bin_sensors_pl[bin_sensor_id][ATTR_OFF],
                         KEY_AVAILABILITY_TOPIC: availability_topic,
-                        KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                        KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
                         KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
                         KEY_UNIQUE_ID: unique_id,
-                        KEY_QOS: str(qos),
+                        KEY_QOS: qos,
                         KEY_DEVICE: {
                             KEY_IDENTIFIERS: [mac],
                             KEY_NAME: device_name,
@@ -619,7 +615,7 @@ else:
                     payload = ""
                 service_data = {
                     KEY_TOPIC: config_topic,
-                    KEY_PAYLOAD: str(payload),
+                    KEY_PAYLOAD: str(payload).replace("\'", "\""),
                     KEY_RETAIN: retain,
                     KEY_QOS: qos,
                 }
@@ -641,7 +637,7 @@ else:
                 state_topic = "~sensor/{}".format(sensors[sensor_id])
             if data.get(id) or data.get(id.lower()):
                 if (data.get(id) or data.get(id.lower())) == ATTR_AC_POWER:
-                    expire_after = "7200"
+                    expire_after = 7200
             payload = {
                 KEY_NAME: sensor_name,
                 KEY_STATE_TOPIC: state_topic,
@@ -650,7 +646,7 @@ else:
                 KEY_VALUE_TEMPLATE: sensors_tpls[sensor_id],
                 KEY_EXPIRE_AFTER: expire_after,
                 KEY_UNIQUE_ID: unique_id,
-                KEY_QOS: str(qos),
+                KEY_QOS: qos,
                 KEY_DEVICE: {
                     KEY_IDENTIFIERS: [mac],
                     KEY_NAME: device_name,
@@ -666,7 +662,7 @@ else:
                 payload[KEY_PAYLOAD_NOT_AVAILABLE] = VALUE_FALSE
             service_data = {
                 KEY_TOPIC: config_topic,
-                KEY_PAYLOAD: str(payload),
+                KEY_PAYLOAD: str(payload).replace("\'", "\""),
                 KEY_RETAIN: retain,
                 KEY_QOS: qos,
             }
@@ -695,7 +691,7 @@ else:
                 KEY_PAYLOAD_OFF: bin_sensors_pl[bin_sensor_id][ATTR_OFF],
                 KEY_DEVICE_CLASS: bin_sensors_classes[bin_sensor_id],
                 KEY_UNIQUE_ID: unique_id,
-                KEY_QOS: str(qos),
+                KEY_QOS: qos,
                 KEY_DEVICE: {
                     KEY_IDENTIFIERS: [mac],
                     KEY_NAME: device_name,
@@ -703,7 +699,7 @@ else:
                     KEY_SW_VERSION: fw_ver,
                     KEY_MANUFACTURER: ATTR_MANUFACTURER,
                 },
-                "~": default_topic
+                "~": default_topic,
             }
             if not battery_powered:
                 payload[KEY_AVAILABILITY_TOPIC] = availability_topic
@@ -711,7 +707,7 @@ else:
                 payload[KEY_PAYLOAD_NOT_AVAILABLE] = VALUE_FALSE
             service_data = {
                 KEY_TOPIC: config_topic,
-                KEY_PAYLOAD: str(payload),
+                KEY_PAYLOAD: str(payload).replace("\'", "\""),
                 KEY_RETAIN: retain,
                 KEY_QOS: qos,
             }
@@ -736,7 +732,7 @@ else:
                 KEY_NAME: light_name,
                 KEY_COMMAND_TOPIC: command_topic,
                 KEY_STATE_TOPIC: state_topic,
-                KEY_COMMAND_OFF_TEMPLATE: {"turn": "off"},
+                KEY_COMMAND_OFF_TEMPLATE: "{\"turn\": \"off\"}",
                 KEY_BRIGHTNESS_TEMPLATE: "{{ value_json.gain | float | multiply(2.55) | round(0) }}",
                 KEY_RED_TEMPLATE: "{{ value_json.red }}",
                 KEY_GREEN_TEMPLATE: "{{ value_json.green }}",
@@ -746,7 +742,7 @@ else:
                 KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
                 KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
                 KEY_UNIQUE_ID: unique_id,
-                KEY_QOS: str(qos),
+                KEY_QOS: qos,
                 KEY_DEVICE: {
                     KEY_IDENTIFIERS: [mac],
                     KEY_NAME: device_name,
@@ -757,20 +753,20 @@ else:
                 "~": default_topic,
             }
             if config_light == ATTR_RGBW and model == ATTR_MODEL_SHELLYRGBW2:
-                payload[KEY_EFFECT_LIST] = ["Off", "Meteor Shower", "Gradual Change", "Flash"],
-                payload[KEY_COMMAND_ON_TEMPLATE] = "{\"turn\":\"on\"{% if brightness is defined %},\"gain\":{{ brightness | float | multiply(0.3922) | round(0) }}{% endif %}{% if red is defined and green is defined and blue is defined %},\"red\":{{ red }},\"green\":{{ green }},\"blue\":{{ blue }}{% endif %}{% if white_value is defined %},\"white\":{{ white_value }}{% endif %}{% if effect is defined %}{% if effect == \"Meteor Shower\" %}\"effect\":1{% elif effect == \"Gradual Change\" %}\"effect\":2{% elif effect == \"Flash\" %}\"effect\":3{% else %}\"effect\":0{% endif %}{% else %}\"effect\":0{% endif %}}",
-                payload[KEY_STATE_TEMPLATE] = "{% if value_json.ison %}on{% else %}off{% endif %}",
-                payload[KEY_EFFECT_TEMPLATE] = "{% if value_json.effect == 1 %}Meteor Shower{% elif value_json.effect == 2 %}Gradual Change{% elif value_json.effect == 3 %}Flash{% else %}Off{% endif %}",
+                payload[KEY_EFFECT_LIST] = ["Off", "Meteor Shower", "Gradual Change", "Flash"]
+                payload[KEY_COMMAND_ON_TEMPLATE] = "{\"turn\":\"on\"{% if brightness is defined %},\"gain\":{{ brightness | float | multiply(0.3922) | round(0) }}{% endif %}{% if red is defined and green is defined and blue is defined %},\"red\":{{ red }},\"green\":{{ green }},\"blue\":{{ blue }}{% endif %}{% if white_value is defined %},\"white\":{{ white_value }}{% endif %}{% if effect is defined %}{% if effect == \"Meteor Shower\" %}\"effect\":1{% elif effect == \"Gradual Change\" %}\"effect\":2{% elif effect == \"Flash\" %}\"effect\":3{% else %}\"effect\":0{% endif %}{% else %}\"effect\":0{% endif %}}"
+                payload[KEY_STATE_TEMPLATE] = "{% if value_json.ison %}on{% else %}off{% endif %}"
+                payload[KEY_EFFECT_TEMPLATE] = "{% if value_json.effect == 1 %}Meteor Shower{% elif value_json.effect == 2 %}Gradual Change{% elif value_json.effect == 3 %}Flash{% else %}Off{% endif %}"
             elif config_light == ATTR_RGBW and model == ATTR_MODEL_SHELLYBULB:
-                payload[KEY_EFFECT_LIST] = ["Off", "Meteor Shower", "Gradual Change", "Breath", "Flash", "On/Off Gradual", "Red/Green Change"],
-                payload[KEY_COMMAND_ON_TEMPLATE] = "{\"turn\":\"on\",\"mode\":\"color\",{% if red is defined and green is defined and blue is defined %}\"red\":{{ red }},\"green\":{{ green }},\"blue\":{{ blue }},{% endif %}{% if white_value is defined %}\"white\":{{ white_value }},{% endif %}{% if brightness is defined %}\"gain\":{{ brightness | float | multiply(0.3922) | round(0) }},{% endif %}{% if effect is defined %}{% if effect == \"Meteor Shower\" %}\"effect\":1{% elif effect == \"Gradual Change\" %}\"effect\":2{% elif effect == \"Breath\" %}\"effect\":3{% elif effect == \"Flash\" %}\"effect\":4{% elif effect == \"On/Off Gradual\" %}\"effect\":5{% elif effect == \"Red/Green Change\" %}\"effect\":6{% else %}\"effect\":0{% endif %}{% else %}\"effect\":0{% endif %}}",
-                payload[KEY_STATE_TEMPLATE] = "{% if value_json.ison == true and value_json.mode == \"color\" %}on{% else %}off{% endif %}",
-                payload[KEY_EFFECT_TEMPLATE] = "{% if value_json.effect == 1 %}Meteor Shower{% elif value_json.effect == 2 %}Gradual Change{% elif value_json.effect == 3 %}Breath{% elif value_json.effect == 4 %}Flash{% elif value_json.effect == 5 %}On/Off Gradual{% elif value_json.effect == 6 %}Red/Green Change{% else %}Off{% endif %}",
+                payload[KEY_EFFECT_LIST] = ["Off", "Meteor Shower", "Gradual Change", "Breath", "Flash", "On/Off Gradual", "Red/Green Change"]
+                payload[KEY_COMMAND_ON_TEMPLATE] = "{\"turn\":\"on\",\"mode\":\"color\",{% if red is defined and green is defined and blue is defined %}\"red\":{{ red }},\"green\":{{ green }},\"blue\":{{ blue }},{% endif %}{% if white_value is defined %}\"white\":{{ white_value }},{% endif %}{% if brightness is defined %}\"gain\":{{ brightness | float | multiply(0.3922) | round(0) }},{% endif %}{% if effect is defined %}{% if effect == \"Meteor Shower\" %}\"effect\":1{% elif effect == \"Gradual Change\" %}\"effect\":2{% elif effect == \"Breath\" %}\"effect\":3{% elif effect == \"Flash\" %}\"effect\":4{% elif effect == \"On/Off Gradual\" %}\"effect\":5{% elif effect == \"Red/Green Change\" %}\"effect\":6{% else %}\"effect\":0{% endif %}{% else %}\"effect\":0{% endif %}}"
+                payload[KEY_STATE_TEMPLATE] = "{% if value_json.ison == true and value_json.mode == \"color\" %}on{% else %}off{% endif %}"
+                payload[KEY_EFFECT_TEMPLATE] = "{% if value_json.effect == 1 %}Meteor Shower{% elif value_json.effect == 2 %}Gradual Change{% elif value_json.effect == 3 %}Breath{% elif value_json.effect == 4 %}Flash{% elif value_json.effect == 5 %}On/Off Gradual{% elif value_json.effect == 6 %}Red/Green Change{% else %}Off{% endif %}"
             else:
                 payload = ""
             service_data = {
                 KEY_TOPIC: config_topic,
-                KEY_PAYLOAD: str(payload),
+                KEY_PAYLOAD: str(payload).replace("\'", "\""),
                 KEY_RETAIN: retain,
                 KEY_QOS: qos,
             }
@@ -785,7 +781,9 @@ else:
                     disc_prefix, id, lights_bin_sensors[bin_sensor_id], light_id
                 )
                 sensor_name = "{} {} {}".format(
-                    device_name, lights_bin_sensors[bin_sensor_id].capitalize(), light_id
+                    device_name,
+                    lights_bin_sensors[bin_sensor_id].capitalize(),
+                    light_id,
                 )
                 state_topic = "~color/{}/status".format(light_id)
                 if config_light == ATTR_RGBW:
@@ -794,10 +792,10 @@ else:
                         KEY_STATE_TOPIC: state_topic,
                         KEY_VALUE_TEMPLATE: lights_bin_sensors_tpls[bin_sensor_id],
                         KEY_AVAILABILITY_TOPIC: availability_topic,
-                        KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                        KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
                         KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
                         KEY_UNIQUE_ID: unique_id,
-                        KEY_QOS: str(qos),
+                        KEY_QOS: qos,
                         KEY_DEVICE: {
                             KEY_IDENTIFIERS: [mac],
                             KEY_NAME: device_name,
@@ -811,7 +809,7 @@ else:
                     payload = ""
                 service_data = {
                     KEY_TOPIC: config_topic,
-                    KEY_PAYLOAD: str(payload),
+                    KEY_PAYLOAD: str(payload).replace("\'", "\""),
                     KEY_RETAIN: retain,
                     KEY_QOS: qos,
                 }
@@ -837,10 +835,10 @@ else:
                         KEY_DEVICE_CLASS: lights_sensors_classes[sensor_id],
                         KEY_VALUE_TEMPLATE: lights_sensors_tpls[sensor_id],
                         KEY_AVAILABILITY_TOPIC: availability_topic,
-                        KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                        KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
                         KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
                         KEY_UNIQUE_ID: unique_id,
-                        KEY_QOS: str(qos),
+                        KEY_QOS: qos,
                         KEY_DEVICE: {
                             KEY_IDENTIFIERS: [mac],
                             KEY_NAME: device_name,
@@ -854,7 +852,7 @@ else:
                     payload = ""
                 service_data = {
                     KEY_TOPIC: config_topic,
-                    KEY_PAYLOAD: str(payload),
+                    KEY_PAYLOAD: str(payload).replace("\'", "\""),
                     KEY_RETAIN: retain,
                     KEY_QOS: qos,
                 }
@@ -874,7 +872,9 @@ else:
                 state_topic = "~white/{}/status".format(light_id)
                 command_topic = "~white/{}/set".format(light_id)
                 unique_id = "{}-light-white-{}".format(id, light_id)
-                config_topic = "{}/light/{}-white-{}/config".format(disc_prefix, id, light_id)
+                config_topic = "{}/light/{}-white-{}/config".format(
+                    disc_prefix, id, light_id
+                )
             availability_topic = "~online"
             if data.get(id):
                 config_light = data.get(id)
@@ -885,14 +885,14 @@ else:
                 KEY_NAME: light_name,
                 KEY_COMMAND_TOPIC: command_topic,
                 KEY_STATE_TOPIC: state_topic,
-                KEY_COMMAND_OFF_TEMPLATE: {"turn": "off"},
+                KEY_COMMAND_OFF_TEMPLATE: "{\"turn\": \"off\"}",
                 KEY_STATE_TEMPLATE: "{% if value_json.ison %}on{% else %}off{% endif %}",
                 KEY_BRIGHTNESS_TEMPLATE: "{{ value_json.brightness | float | multiply(2.55) | round(0) }}",
                 KEY_AVAILABILITY_TOPIC: availability_topic,
                 KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
                 KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
                 KEY_UNIQUE_ID: unique_id,
-                KEY_QOS: str(qos),
+                KEY_QOS: qos,
                 KEY_DEVICE: {
                     KEY_IDENTIFIERS: [mac],
                     KEY_NAME: device_name,
@@ -910,7 +910,7 @@ else:
                 payload = ""
             service_data = {
                 KEY_TOPIC: config_topic,
-                KEY_PAYLOAD: str(payload),
+                KEY_PAYLOAD: str(payload).replace("\'", "\""),
                 KEY_RETAIN: retain,
                 KEY_QOS: qos,
             }
@@ -925,7 +925,9 @@ else:
                     disc_prefix, id, lights_bin_sensors[bin_sensor_id], light_id
                 )
                 sensor_name = "{} {} {}".format(
-                    device_name, lights_bin_sensors[bin_sensor_id].capitalize(), light_id
+                    device_name,
+                    lights_bin_sensors[bin_sensor_id].capitalize(),
+                    light_id,
                 )
                 state_topic = "~white/{}/status".format(light_id)
                 if config_light != ATTR_RGBW:
@@ -937,7 +939,7 @@ else:
                         KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
                         KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
                         KEY_UNIQUE_ID: unique_id,
-                        KEY_QOS: str(qos),
+                        KEY_QOS: qos,
                         KEY_DEVICE: {
                             KEY_IDENTIFIERS: [mac],
                             KEY_NAME: device_name,
@@ -951,7 +953,7 @@ else:
                     payload = ""
                 service_data = {
                     KEY_TOPIC: config_topic,
-                    KEY_PAYLOAD: str(payload),
+                    KEY_PAYLOAD: str(payload).replace("\'", "\""),
                     KEY_RETAIN: retain,
                     KEY_QOS: qos,
                 }
@@ -982,10 +984,10 @@ else:
                         KEY_DEVICE_CLASS: lights_sensors_classes[sensor_id],
                         KEY_VALUE_TEMPLATE: lights_sensors_tpls[sensor_id],
                         KEY_AVAILABILITY_TOPIC: availability_topic,
-                        KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                        KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
                         KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
                         KEY_UNIQUE_ID: unique_id,
-                        KEY_QOS: str(qos),
+                        KEY_QOS: qos,
                         KEY_DEVICE: {
                             KEY_IDENTIFIERS: [mac],
                             KEY_NAME: device_name,
@@ -999,7 +1001,7 @@ else:
                     payload = ""
                 service_data = {
                     KEY_TOPIC: config_topic,
-                    KEY_PAYLOAD: str(payload),
+                    KEY_PAYLOAD: str(payload).replace("\'", "\""),
                     KEY_RETAIN: retain,
                     KEY_QOS: qos,
                 }
@@ -1022,17 +1024,19 @@ else:
                 sensor_name = "{} {} {}".format(
                     device_name, meters_sensors[sensor_id].capitalize(), meter_id
                 )
-                state_topic = "~emeter/{}/{}".format(meter_id, meters_sensors[sensor_id])
+                state_topic = "~emeter/{}/{}".format(
+                    meter_id, meters_sensors[sensor_id]
+                )
                 payload = {
                     KEY_NAME: sensor_name,
                     KEY_STATE_TOPIC: state_topic,
                     KEY_UNIT: meters_sensors_units[sensor_id],
                     KEY_VALUE_TEMPLATE: meters_sensors_tpls[sensor_id],
                     KEY_AVAILABILITY_TOPIC: availability_topic,
-                    KEY_PAYLOAD_AVAILABLE : VALUE_TRUE,
+                    KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
                     KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
                     KEY_UNIQUE_ID: unique_id,
-                    KEY_QOS: str(qos),
+                    KEY_QOS: qos,
                     KEY_DEVICE: {
                         KEY_IDENTIFIERS: [mac],
                         KEY_NAME: device_name,
@@ -1046,7 +1050,7 @@ else:
                     payload[KEY_DEVICE_CLASS] = meters_sensors_classes[sensor_id]
                 service_data = {
                     KEY_TOPIC: config_topic,
-                    KEY_PAYLOAD: str(payload),
+                    KEY_PAYLOAD: str(payload).replace("\'", "\""),
                     KEY_RETAIN: retain,
                     KEY_QOS: qos,
                 }
